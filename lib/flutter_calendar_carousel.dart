@@ -444,8 +444,8 @@ class _CalendarState<T extends EventInterface>
                 isNextMonthDay,
                 isThisMonthDay),
             child: Text(
-              '${now.day}',
-              semanticsLabel: now.day.toString(),
+      _convertToArabicDigits(now.day),
+              semanticsLabel: _convertToArabicDigits(now.day),
               style: getDayStyle(
                   isSelectable,
                   index,
@@ -1232,5 +1232,23 @@ class _CalendarState<T extends EventInterface>
           isThisMonthDay,
           now,
         );
+  }
+
+      String _convertToArabicDigits(int number) {
+    final String locale = widget.locale; // <-- read locale from widget
+
+    const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+
+    String numStr = number.toString();
+
+    // Apply Arabic digits only for Arabic locales
+    if (locale.startsWith('ar')) {
+      for (int i = 0; i < 10; i++) {
+        numStr = numStr.replaceAll(englishDigits[i], arabicDigits[i]);
+      }
+    }
+
+    return numStr;
   }
 }
